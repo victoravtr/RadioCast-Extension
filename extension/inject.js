@@ -1,5 +1,13 @@
 console.log("inject.s Loaded");
 
+const streams = {
+    'Retransmisiones': '',
+    'LPL': 'https://www.youtube.com/channel/UCaFMdq6QrAAEx5k2cLlZNPA',
+    'LCS': 'https://www.youtube.com/channel/UCSF_aFGIIIoWY30GVV19TKA',
+    'LEC': 'https://www.youtube.com/channel/UCWWZjhmokTbezUQr1kbbEYQ',
+    'LCK': 'https://www.youtube.com/channel/UCKVlixycWmapnGQ_wht4cHQ'
+}
+
 loadYoutubeIframe();
 addFontAwesomeCDN();
 checkLocalStorage();
@@ -31,13 +39,38 @@ function createLinkContainer() {
         divContainer.id = "div-container";
         divContainer.className = "llTyOO";
         document.getElementsByClassName("hwDLDQ")[0].appendChild(divContainer).before(document.getElementsByClassName("top-nav__search-container")[0]);
+        
+        let selectContainer = document.createElement('select');
+        selectContainer.id = "selectContainer";
+        for (let key in streams) {
+            let option = document.createElement('option');
+            option.text = key;
+            option.value = streams[key];
+            selectContainer.appendChild(option);
+        }
+        selectContainer.style.backgroundColor =  "#464649";
+        selectContainer.style.border = "none";
+        selectContainer.style.color = "white";
+        selectContainer.style.borderRightColor = "#29292c";
+        selectContainer.style.borderRightStyle = "solid";
+        selectContainer.style.borderTopLeftRadius = "0.6rem";
+        selectContainer.style.borderBottomLeftRadius = "0.6rem";
+        selectContainer.style.paddingTop = "0.5rem";
+        selectContainer.style.paddingBottom = "0.5rem";
+        selectContainer.style.paddingLeft = "1rem";
+        selectContainer.style.paddingRight = "1rem";
+        selectContainer.style.fontSize = "14px";
+        selectContainer.addEventListener("change", handleSelect);
+        document.getElementById("div-container").appendChild(selectContainer);
+
         let inputLink = document.createElement('input');
         inputLink.id = "inputLink";
-        inputLink.className = "giJyex oEfZI";
+        inputLink.className = "giJyex";
         inputLink.placeholder = "Link de Youtube";
-        inputLink.style.borderTopLeftRadius = "0.8rem";
-        inputLink.style.borderBottomLeftRadius = "0.8rem";
-        document.getElementById("div-container").appendChild(inputLink);
+        inputLink.style.borderRadius = "0px";
+        inputLink.style.padding = "0.5rem 1rem";
+        inputLink.style.fontSize = "14px";
+        document.getElementById("div-container").appendChild(inputLink).before(document.getElementById('selectContainer'));
         document.getElementById("div-container").addEventListener("keyup", inputLinkCheck);
         let buttonLink = document.createElement("button");
         buttonLink.id = "buttonLink";
@@ -77,6 +110,8 @@ function checkLocalStorage() {
 }
 
 function buttonLinkClick() {
+    // FIXME: con como esta ahora, si el usuario ya ha metido un video y quiere meter otro nuevo, el boton siempre estara en stop y es algo lioso
+    // tengo que pensar en alguna forma de aclararlo, maybe meter mas controles rollo reset, stop o hacer que cuando el inputLink no esta vacio el icono sea play
     if (document.getElementsByClassName("fas fa-play")[0] === undefined) {
         document.getElementsByClassName("fas fa-stop")[0].className = "fas fa-play";
         removeVideo();
@@ -89,8 +124,13 @@ function buttonLinkClick() {
 function inputLinkCheck(e) {
     let keyCode = e.code || e.key;
     if (keyCode == 'Enter') {
+        document.getElementsByClassName("fas fa-play")[0].className = "fas fa-stop";
         loadVideo();
     }
+}
+
+function handleSelect(event) {
+    document.getElementById("inputLink").value = event.target.value; 
 }
 
 function removeVideo() {
@@ -120,7 +160,7 @@ function loadVideo() {
         }
         document.querySelectorAll('[data-a-target="player-theatre-mode-button"]')[0].disabled = true;
         let youtubeIframe = document.getElementById("player");
-        youtubeIframe.src = "https://www.youtube.com/embed/" + regexResult[1] + "?showinfo=0&enablejsapi=1&origin=https://www.twitch.tv&autoplay=1";
+        youtubeIframe.src = "https://www.youtube.com/embed/" + regexResult + "&origin=https://www.twitch.tv&autoplay=1";
         youtubeIframe.style.width = "100%";
         youtubeIframe.style.maxHeight = "calc(100vh - 16rem)";
         youtubeIframe.style.height = "100%";
@@ -128,13 +168,26 @@ function loadVideo() {
         createControlsDiv();
         moveChatAndTwitchStream();
         document.getElementById("inputLink").value = "";
+        document.getElementById("selectContainer").selectedIndex = 0;
     }
 }
 
 function validateLink() {
+    // FIXME: esto es un poco chapuza, tengo que buscar una forma de meterlo todo en la misma pattern
     const pattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gm
+    const channelPattern = /^(?:http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,}\/channel\/([a-zA-Z0-9_\-]{3,24})/gm
     let link = document.getElementById("inputLink").value.replaceAll(" ", "");
-    return pattern.exec(link);
+    let result = pattern.exec(link);
+    if (!result) {
+        result = channelPattern.exec(link);
+        if (!result) {
+            return false;
+        } else {
+            return "live_stream?channel=" + result[1]
+        }
+    } else {
+        return result[1];
+    }
 }
 
 function moveChatAndTwitchStream() {
