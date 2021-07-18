@@ -64,8 +64,6 @@ function checkLocalStorage() {
             localStorage.setItem('isChecked', 'false');
             break;
         case 'true':
-            loadYoutubeIframe();
-            addFontAwesomeCDN();
             createLinkContainer();
             localStorage.setItem('isChecked', 'true');
             break;
