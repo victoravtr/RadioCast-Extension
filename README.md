@@ -1,6 +1,6 @@
 # RadioCast Extension
 ![](captura_completa.png)
-RadioCast Extension es una extensión para lo radio cast (wow!).
+RadioCast Extension es una extensión para los radio casts (wow!).
 
 Permite insertar vídeos de Youtube dentro de Twitch. Así, podrás ver cualquier radiocast sin tener que recurrir a webs de terceros y sin miedo a ninguna "Purple Screen of Death" por parte de Twitch.
 
