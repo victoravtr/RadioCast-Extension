@@ -77,8 +77,8 @@ h1 {
 }
 
 #warning {
-    min-width: 10rem;
-    white-space: break-spaces;
+	text-align: center;
+    max-width: 10rem;
     color: var(--warning-red);
     display: block;
 }
