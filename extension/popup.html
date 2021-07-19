@@ -1,127 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8" />
     <title>Extension</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<style>
-    body {
-        margin: 5px;
-        background-color: #27272c;
-        color: white;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        flex-direction: column;
-    }
-
-    h1 {
-        font-size: 15px;
-        text-align: center;
-    }
-
-    input {
-        color: white;
-        background-color: #3c3c3c;
-    }
-
-    button {
-        color: white;
-        background-color: #3c3c3c;
-        border: none;
-        padding: none;
-    }
-
-    .content {
-        min-width: 10rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .input {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1px;
-    }
-
-    #version {
-        margin-top: 10px;
-    }
-
-    img {
-        width: 200px;
-    }
-
-    #errorVideo {
-        color: red;
-    }
-
-    #errorVersion {
-        display: none;
-    }
-
-    :root {
-        --color-green: #00a878;
-        --color-red: #b33924;
-        --color-button: #fdffff;
-        --color-black: #000;
-    }
-
-    .switch-button {
-        display: inline-block;
-    }
-
-    .switch-button .switch-button__checkbox {
-        display: none;
-    }
-
-    .switch-button .switch-button__label {
-        background-color: var(--color-red);
-        width: 4rem;
-        height: 2rem;
-        border-radius: 2rem;
-        display: inline-block;
-        position: relative;
-    }
-
-    .switch-button .switch-button__label:before {
-        transition: .2s;
-        display: block;
-        position: absolute;
-        width: 2rem;
-        height: 2rem;
-        background-color: var(--color-button);
-        content: '';
-        border-radius: 50%;
-        box-shadow: inset 0px 0px 0px 1px var(--color-black);
-    }
-
-    .switch-button .switch-button__checkbox:checked+.switch-button__label {
-        background-color: var(--color-green);
-    }
-
-    .switch-button .switch-button__checkbox:checked+.switch-button__label:before {
-        transform: translateX(2rem);
-    }
-
-    #warning {
-        min-width: 15rem;
-        font-size: 12px;
-        color: #f03a17;
-        display: block;
-    }
-
-    p::first-letter {
-        font-size: 18px;
-    }
-
-</style>
-
 <body>
     <h1>RadioCast</h1>
     <div class="content">
@@ -131,6 +14,7 @@
         </div>
         <p id="warning">❌ Si es la primera vez que utilizas la extensión tendrás que recargar la ventana de Twitch para
             que funcione</p>
+        <a href="https://extension.victorav.me/posts/instalation/" target="_blank" rel="noopener noreferrer">Guía de uso</a>
     </div>
 </body>
 <script src="popup.js"></script>

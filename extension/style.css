@@ -1,0 +1,102 @@
+:root {
+    --color-green: #00a878;
+    --color-red: #b33924;
+    --color-white: #fdffff;
+    --color-black: #000;
+    --dark-background: #27272c;
+    --warning-red: #f03a17;
+}
+
+body {
+    margin: 5px;
+    font-size: 13px;
+    background-color: var(--dark-background);
+    color: var(--color-white);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.content {
+    min-width: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+}
+
+.switch-button {
+    display: inline-block;
+}
+
+.switch-button .switch-button__checkbox {
+    display: none;
+}
+
+.switch-button .switch-button__label {
+    background-color: var(--color-red);
+    width: 4rem;
+    height: 2rem;
+    border-radius: 2rem;
+    display: inline-block;
+    position: relative;
+}
+
+.switch-button .switch-button__label:before {
+    transition: .2s;
+    display: block;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--color-white);
+    content: '';
+    border-radius: 50%;
+    box-shadow: inset 0px 0px 0px 1px var(--color-black);
+}
+
+.switch-button .switch-button__checkbox:checked+.switch-button__label {
+    background-color: var(--color-green);
+}
+
+.switch-button .switch-button__checkbox:checked+.switch-button__label:before {
+    transform: translateX(2rem);
+}
+
+#warning {
+	text-align: center;
+    max-width: 10rem;
+    color: var(--warning-red);
+    display: block;
+}
+
+p::first-letter {
+    font-size: 18px;
+}
+
+a {
+    margin-top: 2rem;
+}
+
+a:link, a:visited {
+    color: var(--color-white);
+}
+
+a:hover {}
+
+a:active {
+    border-color: var(--color-white);
+}
