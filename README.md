@@ -20,7 +20,7 @@ Permite insertar vídeos de Youtube dentro de Twitch. Así, podrás ver cualquie
 
 ✅ ~~Modo teatro~~
 
-🕜 Menú desplegable para seleccionar la competición
+✅ ~~Menú desplegable para seleccionar la competición~~
 
 🕗 Soporte para videos de otras webs ❓
 
