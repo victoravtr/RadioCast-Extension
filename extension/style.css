@@ -9,9 +9,10 @@
 
 body {
     margin: 5px;
+    font-size: 13px;
     background-color: var(--dark-background);
     color: var(--color-white);
-    height: 200px;
+    min-height: 200px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -76,8 +77,8 @@ h1 {
 }
 
 #warning {
-    min-width: 15rem;
-    font-size: 12px;
+    min-width: 10rem;
+    white-space: break-spaces;
     color: var(--warning-red);
     display: block;
 }
@@ -88,7 +89,6 @@ p::first-letter {
 
 a {
     margin-top: 2rem;
-    font-size: 13px;
 }
 
 a:link, a:visited {
