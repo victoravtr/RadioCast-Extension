@@ -160,7 +160,7 @@ function loadVideo() {
         }
         document.querySelectorAll('[data-a-target="player-theatre-mode-button"]')[0].disabled = true;
         let youtubeIframe = document.getElementById("player");
-        youtubeIframe.src = "https://www.youtube.com/embed/" + regexResult + "&origin=https://www.twitch.tv&autoplay=1";
+        youtubeIframe.src = "https://www.youtube.com/embed/" + regexResult;
         youtubeIframe.style.width = "100%";
         youtubeIframe.style.maxHeight = "calc(100vh - 16rem)";
         youtubeIframe.style.height = "100%";
