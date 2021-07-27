@@ -37,8 +37,8 @@ function createLinkContainer() {
     if (!document.getElementById("div-container")) {
         let divContainer = document.createElement('div');
         divContainer.id = "div-container";
-        divContainer.className = "llTyOO";
-        document.getElementsByClassName("hwDLDQ")[0].appendChild(divContainer).before(document.getElementsByClassName("top-nav__search-container")[0]);
+        divContainer.className = document.querySelectorAll('[data-a-target="tray-search-input"]')[0].classList[1];
+        document.getElementsByClassName("top-nav__search-container")[0].parentElement.appendChild(divContainer).before(document.getElementsByClassName("top-nav__search-container")[0]);
         
         let selectContainer = document.createElement('select');
         selectContainer.id = "selectContainer";
@@ -65,7 +65,7 @@ function createLinkContainer() {
 
         let inputLink = document.createElement('input');
         inputLink.id = "inputLink";
-        inputLink.className = "giJyex";
+        inputLink.className = document.querySelectorAll('[data-a-target="tw-input"]')[0].classList[2];
         inputLink.placeholder = "Link de Youtube";
         inputLink.style.borderRadius = "0px";
         inputLink.style.padding = "0.5rem 1rem";
@@ -74,7 +74,8 @@ function createLinkContainer() {
         document.getElementById("div-container").addEventListener("keyup", inputLinkCheck);
         let buttonLink = document.createElement("button");
         buttonLink.id = "buttonLink";
-        buttonLink.className = "fMfcuC fhlhUI";
+        buttonLink.style.padding = "0 5px";
+        buttonLink.className = document.querySelectorAll('[icon="NavSearch"]')[0].classList[2];
         buttonLink.innerHTML = "<i class='fas fa-play'></i>";
         buttonLink.addEventListener("click", buttonLinkClick);
         document.getElementById("div-container").appendChild(buttonLink).before(document.getElementById("inputLink"));
@@ -160,7 +161,7 @@ function loadVideo() {
         }
         document.querySelectorAll('[data-a-target="player-theatre-mode-button"]')[0].disabled = true;
         let youtubeIframe = document.getElementById("player");
-        youtubeIframe.src = "https://www.youtube.com/embed/" + regexResult + "&origin=https://www.twitch.tv&autoplay=1";
+        youtubeIframe.src = "https://www.youtube.com/embed/" + regexResult;
         youtubeIframe.style.width = "100%";
         youtubeIframe.style.maxHeight = "calc(100vh - 16rem)";
         youtubeIframe.style.height = "100%";
@@ -230,6 +231,7 @@ function createControlsDiv() {
     theaterModeSVG.setAttribute('viewBox', '0 0 20 20');
     theaterModeSVG.setAttribute('x', '0px');
     theaterModeSVG.setAttribute('y', '0px');
+    theaterModeSVG.style.fill = "white";
     theaterModeSVG.setAttribute('class', 'ScIconSVG-sc-1bgeryd-1 cMQeyU');
 
     let theaterModeTitle = document.createElementNS("http://www.w3.org/2000/svg", 'title');
@@ -264,16 +266,17 @@ function hideControls() {
 }
 
 function theaterHoverIn() {
-    document.getElementById("theaterModeSVG").setAttribute('style', 'filter: drop-shadow(2px 4px 6px white)');
+    document.getElementById("theaterModeSVG").style.filter = "drop-shadow(2px 4px 6px white";
 }
 
 function theaterHoverOut() {
-    document.getElementById("theaterModeSVG").setAttribute('style', 'filter: drop-shadow(0px 0px 0px white)');
+    document.getElementById("theaterModeSVG").style.filter = "drop-shadow(0px 0px 0px white)";
 }
 
 let theaterModeVar = false;
 function theaterMode() {
     const iframeDiv = document.getElementById("iframeDiv");
+    const channelRootPlayer = document.getElementsByClassName("channel-root__player ")[0].children[1]
     const channelInfoPanel = document.getElementsByClassName("channel-root__info channel-root__info--with-chat")[0];
     if (!theaterModeVar) {
         theaterModeVar = true;
@@ -281,8 +284,8 @@ function theaterMode() {
             document.querySelectorAll('[data-a-target="right-column__toggle-collapse-btn"]')[0].click();
             rightClick = false;
         }
-        document.getElementsByClassName("sc-AxjAm hrmWYa")[0].firstElementChild.style.transform = "";
-        document.getElementsByClassName("sc-AxjAm hrmWYa")[0].firstElementChild.firstElementChild.style.transform = "";
+        channelRootPlayer.firstElementChild.style.transform = "";
+        channelRootPlayer.firstElementChild.firstElementChild.style.transform = "";
         document.getElementsByClassName("top-nav")[0].style.display = "none";
         document.getElementsByClassName("persistent-player")[0].style.top = 0;
         document.getElementById("player").style.maxHeight = "";
@@ -297,8 +300,8 @@ function theaterMode() {
         theaterModeVar = false;
         channelInfoPanel.style.marginTop = window.getComputedStyle(document.querySelectorAll('[data-target="persistent-player-content"]')[0]).height;
         channelInfoPanel.style.display = "block";
-        document.getElementsByClassName("sc-AxjAm hrmWYa")[0].firstElementChild.style.transform = "scale(4)";
-        document.getElementsByClassName("sc-AxjAm hrmWYa")[0].firstElementChild.firstElementChild.style.transform = "scale(0.25)";
+        channelRootPlayer.firstElementChild.style.transform = "scale(4)";
+        channelRootPlayer.firstElementChild.firstElementChild.style.transform = "scale(0.25)";
         document.getElementsByClassName("top-nav")[0].style.display = "block";
         document.getElementsByClassName("persistent-player")[0].style.top = "5rem";
         document.getElementById("player").style.maxHeight = "calc(100vh - 16rem)";
