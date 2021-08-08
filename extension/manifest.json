@@ -15,8 +15,8 @@
     },
     "content_scripts": [
         {
-          "matches": ["https://www.twitch.tv/*", "https://twitch.tv/*"],
-          "js": ["inject.js"]
+          "matches": [ "*://www.twitch.tv/*", "*://twitch.tv/*" ],
+          "js": [ "inject.js" ]
     }],
     "permissions": [
         "https://www.twitch.tv/*",
