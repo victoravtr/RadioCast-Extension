@@ -18,8 +18,6 @@ if (document.querySelectorAll('[data-target="persistent-player-content"]')[0]) {
     loadYoutubeIframe();
 }
 
-// TESTINGGGGGGGGGGGGGGGG //
-
 // Cada segundo se comprueba si la url ha cambiado ya que el script solo se
 // esta ejecutando la primera vez que se accede a twitch y algunos elementos no se cargan de primeras
 let intervalChecker = setInterval( function() {
@@ -27,11 +25,16 @@ let intervalChecker = setInterval( function() {
         url = window.location.href;
         if (document.querySelectorAll('[data-target="persistent-player-content"]')[0]) {
             loadYoutubeIframe();
+        } else {
+            disabledStateHandler();
+            if ( document.getElementsByClassName("fas fa-stop")[0]) {
+                document.getElementsByClassName("fas fa-stop")[0].className = "fas fa-play";
+                isPlaying = false;
+            }
         }
     }
 }, 1000);
 
-///////////////////////////
 // Me guardo esto just in case
 // Si no esta en https://www.twitch.tv/ o https://www.twitch.tv/loquesea/loquesea la funcion para insertar el iframe se ejecuta
 // Si estuviese no se deberia de ejecutar ya que el elemento "persistent-player-content" no existe 
@@ -40,6 +43,23 @@ let intervalChecker = setInterval( function() {
 //     loadYoutubeIframe();
 // }
 
+function disabledStateHandler() {
+    if (document.querySelectorAll('[data-target="persistent-player-content"]')[0]) {
+        document.getElementById("selectContainer").disabled = false;
+        document.getElementById("inputLink").disabled = false;
+        document.getElementById("buttonLink").disabled = false;
+        document.getElementById("selectContainer").style.cursor = "pointer";
+        document.getElementById("inputLink").style.cursor = "pointer";
+        document.getElementById("buttonLink").style.cursor = "pointer";
+    } else {
+        document.getElementById("selectContainer").disabled = true;
+        document.getElementById("inputLink").disabled = true;
+        document.getElementById("buttonLink").disabled = true;
+        document.getElementById("selectContainer").style.cursor = "not-allowed";
+        document.getElementById("inputLink").style.cursor = "not-allowed";
+        document.getElementById("buttonLink").style.cursor = "not-allowed";
+    }
+}
 
 // Inserta un div y un iframe donde estara el video de youtube
 function loadYoutubeIframe() {
@@ -53,6 +73,7 @@ function loadYoutubeIframe() {
         youtubeIframe.style.display = "none";
         iframeDiv.appendChild(youtubeIframe);
         iframeDivContainer.appendChild(iframeDiv);
+        disabledStateHandler();
     }
 }
 
@@ -104,6 +125,7 @@ function createLinkContainer() {
         inputLink.style.borderRadius = "0px";
         inputLink.style.padding = "0.5rem 1rem";
         inputLink.style.fontSize = "14px";
+        inputLink.style.pointerEvents = "auto";
         document.getElementById("div-container").appendChild(inputLink).before(document.getElementById('selectContainer'));
         document.getElementById("div-container").addEventListener("keyup", inputLinkCheck);
         let buttonLink = document.createElement("button");
@@ -113,6 +135,7 @@ function createLinkContainer() {
         buttonLink.innerHTML = "<i class='fas fa-play'></i>";
         buttonLink.addEventListener("click", buttonLinkClick);
         document.getElementById("div-container").appendChild(buttonLink).before(document.getElementById("inputLink"));
+        disabledStateHandler();
     }
 
 }
