@@ -1,4 +1,4 @@
-console.log("inject.s Loaded");
+console.log("RadioCast: inject.js Loaded");
 
 const streams = {
     'Retransmisiones': '',
@@ -7,23 +7,77 @@ const streams = {
     'LEC': 'https://www.youtube.com/channel/UCWWZjhmokTbezUQr1kbbEYQ',
     'LCK': 'https://www.youtube.com/channel/UCKVlixycWmapnGQ_wht4cHQ'
 }
+let url = window.location.href;
+let isPlaying = false;
+let theaterModeVar = false;
 
-loadYoutubeIframe();
 addFontAwesomeCDN();
 checkLocalStorage();
 
-function loadYoutubeIframe() {
-    let iframeDivContainer = document.querySelectorAll('[data-target="persistent-player-content"]')[0];
-    let iframeDiv = document.createElement('div');
-    iframeDiv.id = "iframeDiv";
-    iframeDiv.style.height = "100%";
-    let youtubeIframe = document.createElement('iframe');
-    youtubeIframe.id = "player";
-    youtubeIframe.style.display = "none";
-    iframeDiv.appendChild(youtubeIframe);
-    iframeDivContainer.appendChild(iframeDiv);
+if (document.querySelectorAll('[data-target="persistent-player-content"]')[0]) {
+    loadYoutubeIframe();
 }
 
+// Cada segundo se comprueba si la url ha cambiado ya que el script solo se
+// esta ejecutando la primera vez que se accede a twitch y algunos elementos no se cargan de primeras
+let intervalChecker = setInterval( function() {
+    if (url !== window.location.href) {
+        url = window.location.href;
+        if (document.querySelectorAll('[data-target="persistent-player-content"]')[0]) {
+            loadYoutubeIframe();
+        } else {
+            disabledStateHandler();
+            if ( document.getElementsByClassName("fas fa-stop")[0]) {
+                document.getElementsByClassName("fas fa-stop")[0].className = "fas fa-play";
+                isPlaying = false;
+            }
+        }
+    }
+}, 1000);
+
+// Me guardo esto just in case
+// Si no esta en https://www.twitch.tv/ o https://www.twitch.tv/loquesea/loquesea la funcion para insertar el iframe se ejecuta
+// Si estuviese no se deberia de ejecutar ya que el elemento "persistent-player-content" no existe 
+// const twitch_pattern = /.*twitch\.tv\/.\w*(?<!\/)$/mg;
+// if (twitch_pattern.test(window.location.href)) {
+//     loadYoutubeIframe();
+// }
+
+function disabledStateHandler() {
+    if (document.querySelectorAll('[data-target="persistent-player-content"]')[0]) {
+        document.getElementById("selectContainer").disabled = false;
+        document.getElementById("inputLink").disabled = false;
+        document.getElementById("buttonLink").disabled = false;
+        document.getElementById("selectContainer").style.cursor = "pointer";
+        document.getElementById("inputLink").style.cursor = "pointer";
+        document.getElementById("buttonLink").style.cursor = "pointer";
+    } else {
+        document.getElementById("selectContainer").disabled = true;
+        document.getElementById("inputLink").disabled = true;
+        document.getElementById("buttonLink").disabled = true;
+        document.getElementById("selectContainer").style.cursor = "not-allowed";
+        document.getElementById("inputLink").style.cursor = "not-allowed";
+        document.getElementById("buttonLink").style.cursor = "not-allowed";
+    }
+}
+
+// Inserta un div y un iframe donde estara el video de youtube
+function loadYoutubeIframe() {
+    if (document.getElementById('iframeDiv') == null) {
+        let iframeDivContainer = document.querySelectorAll('[data-target="persistent-player-content"]')[0];
+        let iframeDiv = document.createElement('div');
+        iframeDiv.id = "iframeDiv";
+        iframeDiv.style.height = "100%";
+        let youtubeIframe = document.createElement('iframe');
+        youtubeIframe.id = "player";
+        youtubeIframe.style.display = "none";
+        iframeDiv.appendChild(youtubeIframe);
+        iframeDivContainer.appendChild(iframeDiv);
+        disabledStateHandler();
+    }
+}
+
+// Añade fontawesome para los iconos
 function addFontAwesomeCDN() {
     let cssNode = document.createElement("link");
     cssNode.setAttribute("rel", "stylesheet");
@@ -32,6 +86,7 @@ function addFontAwesomeCDN() {
     document.getElementsByTagName("head")[0].appendChild(cssNode);
 }
 
+// Inserta el menu para seleccionar el stream y el input para el link
 function createLinkContainer() {
     localStorage.setItem('isChecked', 'true');
     if (!document.getElementById("div-container")) {
@@ -39,7 +94,7 @@ function createLinkContainer() {
         divContainer.id = "div-container";
         divContainer.className = document.querySelectorAll('[data-a-target="tray-search-input"]')[0].classList[1];
         document.getElementsByClassName("top-nav__search-container")[0].parentElement.appendChild(divContainer).before(document.getElementsByClassName("top-nav__search-container")[0]);
-        
+
         let selectContainer = document.createElement('select');
         selectContainer.id = "selectContainer";
         for (let key in streams) {
@@ -48,7 +103,7 @@ function createLinkContainer() {
             option.value = streams[key];
             selectContainer.appendChild(option);
         }
-        selectContainer.style.backgroundColor =  "#464649";
+        selectContainer.style.backgroundColor = "#464649";
         selectContainer.style.border = "none";
         selectContainer.style.color = "white";
         selectContainer.style.borderRightColor = "#29292c";
@@ -70,6 +125,7 @@ function createLinkContainer() {
         inputLink.style.borderRadius = "0px";
         inputLink.style.padding = "0.5rem 1rem";
         inputLink.style.fontSize = "14px";
+        inputLink.style.pointerEvents = "auto";
         document.getElementById("div-container").appendChild(inputLink).before(document.getElementById('selectContainer'));
         document.getElementById("div-container").addEventListener("keyup", inputLinkCheck);
         let buttonLink = document.createElement("button");
@@ -79,10 +135,12 @@ function createLinkContainer() {
         buttonLink.innerHTML = "<i class='fas fa-play'></i>";
         buttonLink.addEventListener("click", buttonLinkClick);
         document.getElementById("div-container").appendChild(buttonLink).before(document.getElementById("inputLink"));
+        disabledStateHandler();
     }
 
 }
 
+// Borra el menu para seleccionar el stream y el input para el link
 function removeLinkContainer() {
     localStorage.setItem('isChecked', 'false');
     let linkContainer = document.getElementById("div-container");
@@ -91,6 +149,7 @@ function removeLinkContainer() {
     }
 }
 
+// Comprueba el valor de la variable 'isChecked' y dependiendo del valor inizializa los elementos
 function checkLocalStorage() {
     const isChecked = localStorage.getItem('isChecked');
     switch (isChecked) {
@@ -110,30 +169,35 @@ function checkLocalStorage() {
     }
 }
 
+// Maneja el boton, inserta o quita el video
 function buttonLinkClick() {
-    // FIXME: con como esta ahora, si el usuario ya ha metido un video y quiere meter otro nuevo, el boton siempre estara en stop y es algo lioso
-    // tengo que pensar en alguna forma de aclararlo, maybe meter mas controles rollo reset, stop o hacer que cuando el inputLink no esta vacio el icono sea play
-    if (document.getElementsByClassName("fas fa-play")[0] === undefined) {
-        document.getElementsByClassName("fas fa-stop")[0].className = "fas fa-play";
-        removeVideo();
-    } else {
-        document.getElementsByClassName("fas fa-play")[0].className = "fas fa-stop";
-        loadVideo();
+    if (document.getElementById("player")) {
+        if (isPlaying) {
+            removeVideo();
+            isPlaying = false;
+        } else {
+            loadVideo();
+            isPlaying = true;
+        }
     }
 }
 
+// Simula el click del boton si se pulsa la tecla 'Enter' dentro del input
 function inputLinkCheck(e) {
     let keyCode = e.code || e.key;
     if (keyCode == 'Enter') {
-        document.getElementsByClassName("fas fa-play")[0].className = "fas fa-stop";
-        loadVideo();
+        // document.getElementsByClassName("fas fa-play")[0].className = "fas fa-stop";
+        // loadVideo();
+        buttonLinkClick();
     }
 }
 
+// Añade la url del stream seleccionado al input
 function handleSelect(event) {
-    document.getElementById("inputLink").value = event.target.value; 
+    document.getElementById("inputLink").value = event.target.value;
 }
 
+// Quita el video
 function removeVideo() {
     document.querySelectorAll('[data-a-target="player-theatre-mode-button"]')[0].disabled = false;
     if (document.getElementById("player") != null) {
@@ -148,12 +212,15 @@ function removeVideo() {
         document.getElementsByClassName("right-column")[0].parentElement.style.right = "";
         document.getElementsByClassName("right-column")[0].parentElement.style.top = "";
         document.getElementsByClassName("right-column")[0].parentElement.style.height = "";
+        document.getElementsByClassName("fas fa-stop")[0].className = "fas fa-play";
     }
 }
 
+// Añade el video
 function loadVideo() {
     let regexResult = validateLink();
     if (!validateLink()) {
+        document.getElementById("inputLink").value = "";
         alert("El link que has introducido no es válido");
     } else {
         if (document.querySelectorAll('[data-a-target="right-column__toggle-collapse-btn"]')[0].classList.contains("cdLbRd")) {
@@ -170,9 +237,14 @@ function loadVideo() {
         moveChatAndTwitchStream();
         document.getElementById("inputLink").value = "";
         document.getElementById("selectContainer").selectedIndex = 0;
+        document.getElementsByClassName("fas fa-play")[0].className = "fas fa-stop";
     }
 }
 
+// Valida el link:
+//  Primero comprueba si es un video valido de youtube y devuelve el id + "?autoplay=1".
+//  Si no lo es, comprueba si es el link de un canal de youtube y devuelve el id + "&autoplay=1".
+//  Si no lo es, devuelve false.
 function validateLink() {
     // FIXME: esto es un poco chapuza, tengo que buscar una forma de meterlo todo en la misma pattern
     const pattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gm
@@ -184,13 +256,14 @@ function validateLink() {
         if (!result) {
             return false;
         } else {
-            return "live_stream?channel=" + result[1]
+            return "live_stream?channel=" + result[1] + "&autoplay=1"
         }
     } else {
-        return result[1];
+        return result[1] + "?autoplay=1";
     }
 }
 
+// Mueve el stream de twitch y el chat para hacerle sitio al video de Youtube
 function moveChatAndTwitchStream() {
     let chat = document.getElementsByClassName("right-column")[0].parentElement;
     let chat_width = window.getComputedStyle(document.getElementsByClassName("stream-chat")[0]).width;
@@ -209,6 +282,7 @@ function moveChatAndTwitchStream() {
     chat.style.height = 'calc(100% - ' + player_height + ')';
 }
 
+// Añade el boton para habilitar o deshabilitar el modo teatro
 function createControlsDiv() {
     let controlsDiv = document.createElement('div');
     controlsDiv.id = "controlsDiv";
@@ -257,23 +331,25 @@ function createControlsDiv() {
     theaterModeSVG.addEventListener("mouseout", theaterHoverOut);
 }
 
+// Muestran o esconden el boton de modo teatro
 function showControls() {
     document.getElementById("controlsDiv").style.display = "flex";
 }
-
 function hideControls() {
     document.getElementById("controlsDiv").style.display = "none";
 }
 
+// Añade un efecto al hacer hover sobre el boton de modo teatro
 function theaterHoverIn() {
     document.getElementById("theaterModeSVG").style.filter = "drop-shadow(2px 4px 6px white";
 }
 
+// Quita el efecto al dejar de hacer hover sobre el boton de modo teatro
 function theaterHoverOut() {
     document.getElementById("theaterModeSVG").style.filter = "drop-shadow(0px 0px 0px white)";
 }
 
-let theaterModeVar = false;
+// Habilita o deshabilita el modo teatro
 function theaterMode() {
     const iframeDiv = document.getElementById("iframeDiv");
     const channelRootPlayer = document.getElementsByClassName("channel-root__player ")[0].children[1]
