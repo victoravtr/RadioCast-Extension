@@ -93,8 +93,11 @@ function createLinkContainer() {
         let divContainer = document.createElement('div');
         divContainer.id = "div-container";
         divContainer.className = document.querySelectorAll('[data-a-target="tray-search-input"]')[0].classList[1];
+        // setear el width con un !important hace que falle por algun mecanismo arcano que no recuerdo, seteando el min
+        //  y el max se puede conseguir lo mismo
+        divContainer.style.maxWidth = "40rem";
+        divContainer.style.minWidth = "40rem";
         document.getElementsByClassName("top-nav__search-container")[0].parentElement.appendChild(divContainer).before(document.getElementsByClassName("top-nav__search-container")[0]);
-
         let selectContainer = document.createElement('select');
         selectContainer.id = "selectContainer";
         for (let key in streams) {
